@@ -7,62 +7,43 @@ from models.forecast import run_simulation
 from models.model import rank_treatments
 from utils.helpers import save_results, example_cohort_csv
 
-# ────────────────────────────────────────────────
-# CONFIG - This must be the first Streamlit command
-# ────────────────────────────────────────────────
-st.set_page_config(
-    page_title="Digital Virtual Twin",
-    page_icon="🩺",              # Medical stethoscope icon → replaces Streamlit default favicon
-    layout="wide"
-)
-
-# Optional: hide Streamlit menu & footer completely
-st.markdown(
-    """
-    <style>
-        footer {visibility: hidden !important;}
-        #MainMenu {visibility: hidden !important;}
-        header {visibility: hidden !important;}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+st.set_page_config(page_title="Digital Virtual Twin ", layout="wide")
 
 # ---------------- Sidebar Navigation ----------------
-st.sidebar.title("🧠 Digital Virtual Twin")
+st.sidebar.title(" Digital Virtual Twin")
 menu = st.sidebar.radio(
     "Navigation",
     [
-        "🏠 Home",
-        "🧍 Create Patient",
-        "🦠 Disease & Drugs",
-        "⚙ Simulation",
-        "🤖 AI Assistant",
-        "📄 Export / Reports"
+        " Home",
+        " Create Patient",
+        " Disease & Drugs",
+        " Simulation",
+        " AI Assistant",
+        " Export / Reports"
     ]
 )
 
-st.title("Digital Virtual Twin for Drug Simulation")
+st.title("Digital Virtual Twin for Drug Simulation ")
 
 # ---------------- Home ----------------
-if menu == "🏠 Home":
+if menu == " Home":
     st.header("System Overview")
     st.markdown("""
     Welcome to the **Digital Virtual Twin Platform**.  
     This system allows simulation of virtual patients and drug-disease interactions to explore treatment strategies in a **safe, synthetic environment**.
-
+    
     **Why it matters:**  
     - Visualize how different drugs affect patient health over time  
     - Compare multiple treatments efficiently  
     - Explore disease progression and organ response  
     - Supports healthcare education and research  
-
+    
     This system is **educational only** and not intended for clinical use.
     """)
     st.info("Created by Simon — simulating future healthcare education systems.")
 
 # ---------------- Create Patient ----------------
-if menu == "🧍 Create Patient":
+if menu == " Create Patient":
     st.header("Create Virtual Patient")
     with st.form("patient_form", clear_on_submit=False):
         name = st.text_input("Patient Name", value="Patient A")
@@ -72,7 +53,7 @@ if menu == "🧍 Create Patient":
         immune = st.slider("Immune strength (0–100)", 0, 100, 60)
         comorb = st.multiselect("Comorbidities", ["diabetes", "hypertension", "asthma"])
         env = st.selectbox("Environment", ["urban", "rural", "tropical", "temperate"])
-        submitted = st.form_submit_button("✅ Create Patient")
+        submitted = st.form_submit_button(" Create Patient")
     if submitted:
         patient = {
             "name": name,
@@ -88,9 +69,9 @@ if menu == "🧍 Create Patient":
         st.table(pd.DataFrame([patient]))
 
 # ---------------- Disease & Drugs ----------------
-if menu == "🦠 Disease & Drugs":
+if menu == " Disease & Drugs":
     st.header("Disease & Drug Selection")
-
+    
     diseases = ["Influenza", "Malaria", "Common Cold", "COVID-19", "Dengue", "Synthetic Pathogen"]
     real_drugs = {
         "Influenza": ["Oseltamivir (Tamiflu)", "Zanamivir (Relenza)"],
@@ -136,11 +117,11 @@ if menu == "🦠 Disease & Drugs":
         st.success(f"Cohort loaded: {len(cohort)} patients")
 
 # ---------------- Simulation ----------------
-if menu == "⚙ Simulation":
+if menu == " Simulation":
     st.header("Run Simulation")
     days = st.slider("Simulation duration (days)", 1, 60, 20)
-
-    if st.button("▶ Start Simulation"):
+    
+    if st.button(" Start Simulation"):
         patient = st.session_state.get("patient")
         disease = st.session_state.get("selected_disease")
         drugs = st.session_state.get("selected_drugs")
@@ -151,13 +132,13 @@ if menu == "⚙ Simulation":
             with st.spinner("Running synthetic simulation..."):
                 df = run_simulation(patient, disease, drugs, days)
             st.session_state["last_sim"] = df
-            st.success("✅ Simulation complete!")
+            st.success(" Simulation complete!")
 
     if "last_sim" in st.session_state:
         df = st.session_state["last_sim"]
 
         # ---------------- 2D Line Plot ----------------
-        st.subheader("📈 Simulation Timeline")
+        st.subheader(" Simulation Timeline")
         fig = px.line(
             df,
             x="day",
@@ -167,7 +148,7 @@ if menu == "⚙ Simulation":
         st.plotly_chart(fig, use_container_width=True)
 
         # ---------------- Animated Grouped Bar Chart ----------------
-        st.subheader("💊 Drug Effect vs Toxicity (Animated)")
+        st.subheader(" Drug Effect vs Toxicity (Animated)")
         bar_df = pd.DataFrame()
         for d in st.session_state.get("selected_drugs", []):
             df_d = run_simulation(patient, disease, [d], days)
@@ -219,7 +200,7 @@ if menu == "⚙ Simulation":
         st.plotly_chart(bar_fig, use_container_width=True)
 
         # ---------------- 3D Digital Twin ----------------
-        st.subheader("🧬 3D Interactive Digital Twin")
+        st.subheader(" 3D Interactive Digital Twin")
         organs_pos = {
             "heart": (0, 0, 0),
             "lungs": (-1, 0, 0),
@@ -293,7 +274,7 @@ if menu == "⚙ Simulation":
         st.dataframe(df)
 
 # ---------------- AI Assistant ----------------
-if menu == "🤖 AI Assistant":
+if menu == " AI Assistant":
     st.header("AI Treatment Assistant")
     if "last_sim" not in st.session_state:
         st.info("Run a simulation to activate AI assistant.")
@@ -301,9 +282,9 @@ if menu == "🤖 AI Assistant":
         cohort = st.session_state.get("cohort")
         disease = st.session_state.get("selected_disease")
         drugs = st.session_state.get("selected_drugs")
-
+        
         if cohort is not None:
-            st.subheader("🏆 Cohort Drug Ranking Summary")
+            st.subheader(" Cohort Drug Ranking Summary")
             summary = []
             for idx, patient_row in cohort.iterrows():
                 patient_dict = patient_row.to_dict()
@@ -316,17 +297,17 @@ if menu == "🤖 AI Assistant":
             df = st.session_state["last_sim"]
             patient = st.session_state.get("patient", {})
             ranking, _ = rank_treatments(df, drugs, patient)
-            st.subheader("🏆 Best Drug Recommendation")
+            st.subheader(" Best Drug Recommendation")
             best_drug = ranking[0] if ranking else {"name": "N/A", "score": 0}
             st.success(f"Best drug: {best_drug['name']} (Score: {best_drug['score']:.2f})")
             st.subheader("Full Ranking Table")
             st.table(pd.DataFrame(ranking))
 
 # ---------------- Export ----------------
-if menu == "📄 Export / Reports":
+if menu == " Export / Reports":
     st.header("Export Results")
     if "last_sim" in st.session_state:
-        st.download_button("⬇ Download Simulation CSV",
+        st.download_button(" Download Simulation CSV",
                            data=st.session_state["last_sim"].to_csv(index=False),
                            file_name="simulation_results.csv")
 
