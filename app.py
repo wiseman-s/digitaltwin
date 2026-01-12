@@ -7,7 +7,26 @@ from models.forecast import run_simulation
 from models.model import rank_treatments
 from utils.helpers import save_results, example_cohort_csv
 
-st.set_page_config(page_title="Digital Virtual Twin ", layout="wide")
+# ────────────────────────────────────────────────
+# CONFIG - This must be the first Streamlit command
+# ────────────────────────────────────────────────
+st.set_page_config(
+    page_title="Digital Virtual Twin",
+    page_icon="🩺",              # Medical stethoscope icon → replaces Streamlit default favicon
+    layout="wide"
+)
+
+# Optional: hide Streamlit menu & footer completely
+st.markdown(
+    """
+    <style>
+        footer {visibility: hidden !important;}
+        #MainMenu {visibility: hidden !important;}
+        header {visibility: hidden !important;}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # ---------------- Sidebar Navigation ----------------
 st.sidebar.title("🧠 Digital Virtual Twin")
@@ -23,7 +42,7 @@ menu = st.sidebar.radio(
     ]
 )
 
-st.title("Digital Virtual Twin for Drug Simulation ")
+st.title("Digital Virtual Twin for Drug Simulation")
 
 # ---------------- Home ----------------
 if menu == "🏠 Home":
